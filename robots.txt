@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gyesan-haejwo.vercel.app/sitemap.xml

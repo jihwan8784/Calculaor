@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1b1d21" media="(prefers-color-scheme: dark)">
+  <title>부가세 계산기 - 공급가액·부가세 10% 자동 계산 | 계산해줘</title>
+  <meta name="description" content="공급가액에 부가세 10%를 더하거나, 부가세 포함 금액을 공급가액과 세액으로 나눠 바로 계산합니다. 세금계산서 작성 전에 확인하세요.">
+  <link rel="canonical" href="/vat/">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a class="logo" href="../">계산<span>해줘</span></a>
+      <nav><a href="../">전체 계산기</a></nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>부가세 계산기</h1>
+    <p class="lead">금액을 넣으면 공급가액, 부가세, 합계를 바로 나눠드려요.</p>
+
+    <section class="card">
+      <div class="field">
+        <label id="mode-label">입력한 금액은</label>
+        <div class="seg" id="mode" role="group" aria-labelledby="mode-label">
+          <button type="button" class="on" data-v="total">부가세 포함 (합계)</button>
+          <button type="button" data-v="supply">부가세 별도 (공급가액)</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="amount">금액</label>
+        <div class="input-wrap">
+          <input id="amount" inputmode="numeric" autocomplete="off" value="110,000">
+          <span class="unit">원</span>
+        </div>
+        <div class="hint" id="amountKor"></div>
+        <div class="quick" data-target="amount">
+          <button type="button" data-add="10000">+1만</button>
+          <button type="button" data-add="100000">+10만</button>
+          <button type="button" data-add="1000000">+100만</button>
+          <button type="button" data-set="0">지우기</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" aria-live="polite">
+      <ul class="rows" style="margin-top:0">
+        <li><span class="k">공급가액</span><span class="v" id="supply">0원</span></li>
+        <li><span class="k">부가세 (10%)</span><span class="v" id="vat">0원</span></li>
+        <li class="total"><span class="k">합계</span><span class="v" id="total">0원</span></li>
+      </ul>
+    </section>
+
+    <div class="ad-slot"></div>
+
+    <article class="card article">
+      <h2 style="margin-top:0">부가세 계산 공식</h2>
+      <table>
+        <tr><th>알고 있는 금액</th><th>계산 방법</th></tr>
+        <tr><td>공급가액</td><td>부가세 = 공급가액 × 10%<br>합계 = 공급가액 × 1.1</td></tr>
+        <tr><td>합계 (부가세 포함)</td><td>부가세 = 합계 ÷ 11<br>공급가액 = 합계 − 부가세</td></tr>
+      </table>
+      <p>예를 들어 합계가 110,000원이면 부가세는 10,000원, 공급가액은 100,000원이에요. 원 단위 미만은 버려요.</p>
+
+      <h2>부가가치세란?</h2>
+      <p>물건이나 서비스를 살 때 가격에 붙는 10%의 세금이에요. 소비자가 내지만, 사업자가 대신 받아서 나라에 신고하고 납부해요. 그래서 사업자끼리 거래할 때는 견적서나 세금계산서에 "공급가액"과 "부가세"를 나눠서 적어요.</p>
+
+      <h3>신고·납부 시기</h3>
+      <table>
+        <tr><th>구분</th><th>과세 기간</th><th>신고 기한</th></tr>
+        <tr><td>일반과세자 1기</td><td>1월 ~ 6월</td><td>7월 25일</td></tr>
+        <tr><td>일반과세자 2기</td><td>7월 ~ 12월</td><td>다음 해 1월 25일</td></tr>
+        <tr><td>간이과세자</td><td>1월 ~ 12월</td><td>다음 해 1월 25일</td></tr>
+      </table>
+
+      <h2>자주 묻는 질문</h2>
+      <details>
+        <summary>"VAT 별도"는 무슨 뜻이에요?</summary>
+        <p>적힌 가격에 부가세가 빠져 있다는 뜻이에요. 실제로는 그 금액의 1.1배를 내야 해요. "VAT 포함"은 이미 부가세가 들어간 가격이에요.</p>
+      </details>
+      <details>
+        <summary>간이과세자도 10%로 계산하나요?</summary>
+        <p>간이과세자는 업종별 부가가치율을 곱해서 실제 세금이 더 적어요. 다만 손님에게 받는 가격을 나눌 때는 보통 이 계산기처럼 10% 기준으로 봐요.</p>
+      </details>
+      <details>
+        <summary>면세 품목도 있나요?</summary>
+        <p>쌀·채소 같은 가공되지 않은 식료품, 병원 진료, 교육 서비스, 도서 등은 부가세가 붙지 않아요.</p>
+      </details>
+
+      <p class="notice">이 계산기는 일반과세 10% 기준의 <b>참고용</b>이에요. 실제 신고는 세무서나 세무 전문가에게 확인하세요.</p>
+    </article>
+
+    <h2>다른 계산기</h2>
+    <div class="grid" id="related"></div>
+  </main>
+
+  <footer class="footer">
+    <div><a href="../about.html">사이트 소개</a><a href="../privacy.html">개인정보처리방침</a></div>
+    <div>© 2026 계산해줘 · 모든 계산 결과는 참고용입니다.</div>
+  </footer>
+
+  <script src="../assets/common.js"></script>
+  <script src="vat.js"></script>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const won = (n) => formatNumber(n) + "원";
+    let mode = "total";
+
+    function render() {
+      const amount = parseNumber($("amount").value);
+      $("amountKor").textContent = amount ? toKoreanWon(amount) : "금액을 입력하세요";
+      const r = mode === "total" ? fromTotal(amount) : fromSupply(amount);
+      $("supply").textContent = won(r.supply);
+      $("vat").textContent = won(r.vat);
+      $("total").textContent = won(r.total);
+    }
+
+    attachCommaInput($("amount"), render);
+    bindQuick(render);
+    bindSeg($("mode"), (v) => { mode = v; render(); });
+    renderRelated("vat");
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1b1d21" media="(prefers-color-scheme: dark)">
+  <title>전월세 전환 계산기 - 전세↔월세 전환율 계산 | 계산해줘</title>
+  <meta name="description" content="전세를 월세로, 월세를 전세로 바꾸면 얼마인지 전월세 전환율로 바로 계산합니다. 지금 계약 조건의 전환율도 확인하세요.">
+  <link rel="canonical" href="/rent/">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a class="logo" href="../">계산<span>해줘</span></a>
+      <nav><a href="../">전체 계산기</a></nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>전월세 전환 계산기</h1>
+    <p class="lead">전세를 월세로, 월세를 전세로 바꾸면 얼마인지 알려드려요.</p>
+
+    <section class="card">
+      <div class="field">
+        <label id="mode-label">무엇을 계산할까요?</label>
+        <div class="seg" id="mode" role="group" aria-labelledby="mode-label">
+          <button type="button" class="on" data-v="toMonthly">전세 → 월세</button>
+          <button type="button" data-v="toJeonse">월세 → 전세</button>
+          <button type="button" data-v="rate">전환율 확인</button>
+        </div>
+      </div>
+
+      <div class="field" data-show="toMonthly rate">
+        <label for="jeonse">전세 보증금</label>
+        <div class="input-wrap">
+          <input id="jeonse" inputmode="numeric" autocomplete="off" value="300,000,000">
+          <span class="unit">원</span>
+        </div>
+        <div class="hint" id="jeonseKor"></div>
+      </div>
+
+      <div class="field">
+        <label for="deposit">월세 보증금</label>
+        <div class="input-wrap">
+          <input id="deposit" inputmode="numeric" autocomplete="off" value="100,000,000">
+          <span class="unit">원</span>
+        </div>
+        <div class="hint" id="depositKor"></div>
+      </div>
+
+      <div class="field" data-show="toJeonse rate">
+        <label for="monthly">월세</label>
+        <div class="input-wrap">
+          <input id="monthly" inputmode="numeric" autocomplete="off" value="750,000">
+          <span class="unit">원</span>
+        </div>
+      </div>
+
+      <div class="field" data-show="toMonthly toJeonse">
+        <label for="rate">전월세 전환율</label>
+        <div class="input-wrap">
+          <input id="rate" inputmode="decimal" autocomplete="off" value="4.5">
+          <span class="unit">%</span>
+        </div>
+        <div class="hint">법정 상한은 <b>한국은행 기준금리 + 2%p</b>예요. 계약 전 현재 기준금리를 확인하세요.</div>
+      </div>
+    </section>
+
+    <section class="card" aria-live="polite">
+      <div class="result-main">
+        <div class="label" id="resLabel">예상 월세</div>
+        <div class="value" id="resValue">0원</div>
+        <div class="sub" id="resSub"></div>
+      </div>
+      <ul class="rows" id="resRows"></ul>
+    </section>
+
+    <div class="ad-slot"></div>
+
+    <article class="card article">
+      <h2 style="margin-top:0">전월세 전환율이란?</h2>
+      <p>전월세 전환율은 <b>전세 보증금을 월세로 바꿀 때 적용하는 연 이율</b>이에요. 전환율이 4.5%라면, 보증금 1억 원을 빼는 대신 1년에 450만 원(한 달 37만 5천 원)의 월세를 내는 셈이에요.</p>
+
+      <h3>계산 공식</h3>
+      <table>
+        <tr><th>계산</th><th>공식</th></tr>
+        <tr><td>전세 → 월세</td><td>(전세금 − 월세 보증금) × 전환율 ÷ 12</td></tr>
+        <tr><td>월세 → 전세</td><td>월세 보증금 + 월세 × 12 ÷ 전환율</td></tr>
+        <tr><td>전환율</td><td>월세 × 12 ÷ (전세금 − 월세 보증금)</td></tr>
+      </table>
+
+      <h3>법정 전환율 상한</h3>
+      <p>주택임대차보호법에 따라 계약 기간 중이나 갱신할 때 전세를 월세로 바꾸면, 전환율은 <b>한국은행 기준금리 + 2%p</b>를 넘을 수 없어요. 예를 들어 기준금리가 2.5%라면 상한은 4.5%예요. 이보다 높게 요구하면 넘는 부분은 무효예요.</p>
+      <p>단, 새로 계약하는 경우에는 이 상한이 적용되지 않아요. 그래서 실제 시장 전환율은 지역과 집 종류에 따라 5~7%까지 높게 형성되기도 해요.</p>
+
+      <h2>자주 묻는 질문</h2>
+      <details>
+        <summary>전세랑 월세 중 뭐가 유리해요?</summary>
+        <p>전환율과 내 돈의 이자(또는 대출 금리)를 비교하면 돼요. 전세대출 금리가 전환율보다 낮으면 전세가, 높으면 월세가 유리한 편이에요.</p>
+      </details>
+      <details>
+        <summary>집주인이 법정 상한보다 높은 월세를 요구해요.</summary>
+        <p>계약 기간 중이거나 갱신하는 경우라면 상한을 넘는 월세는 무효라서, 이미 냈다면 돌려달라고 할 수 있어요. 주택임대차분쟁조정위원회에 조정을 신청할 수도 있어요.</p>
+      </details>
+      <details>
+        <summary>관리비도 포함해서 계산하나요?</summary>
+        <p>아니요. 전환율 계산에는 순수한 월세만 넣어요. 관리비는 따로 생각하세요.</p>
+      </details>
+
+      <p class="notice">이 계산기는 <b>참고용</b>이에요. 실제 계약 조건은 집주인과의 협의와 시장 상황에 따라 달라질 수 있어요.</p>
+    </article>
+
+    <h2>다른 계산기</h2>
+    <div class="grid" id="related"></div>
+  </main>
+
+  <footer class="footer">
+    <div><a href="../about.html">사이트 소개</a><a href="../privacy.html">개인정보처리방침</a></div>
+    <div>© 2026 계산해줘 · 모든 계산 결과는 참고용입니다.</div>
+  </footer>
+
+  <script src="../assets/common.js"></script>
+  <script src="rent.js"></script>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const won = (n) => formatNumber(n) + "원";
+    let mode = "toMonthly";
+
+    function row(k, v) { return `<li><span class="k">${k}</span><span class="v">${v}</span></li>`; }
+
+    function render() {
+      document.querySelectorAll("[data-show]").forEach((el) => {
+        el.hidden = !el.dataset.show.split(" ").includes(mode);
+      });
+
+      const jeonse = parseNumber($("jeonse").value);
+      const deposit = parseNumber($("deposit").value);
+      const monthly = parseNumber($("monthly").value);
+      const rate = parseDecimal($("rate").value);
+      $("jeonseKor").textContent = jeonse ? toKoreanWon(jeonse) : "";
+      $("depositKor").textContent = deposit ? toKoreanWon(deposit) : "";
+
+      if (mode === "toMonthly") {
+        const m = jeonseToMonthly({ jeonse, deposit, rate });
+        const diff = Math.max(jeonse - deposit, 0);
+        $("resLabel").textContent = "예상 월세";
+        $("resValue").textContent = won(m);
+        $("resSub").textContent = `보증금 ${toKoreanWon(deposit)} / 월 ${won(m)}`;
+        $("resRows").innerHTML =
+          row("월세로 바꾸는 금액", won(diff)) + row("적용 전환율", rate + "%") + row("연간 월세 합계", won(m * 12));
+      } else if (mode === "toJeonse") {
+        const j = monthlyToJeonse({ deposit, monthly, rate });
+        $("resLabel").textContent = "같은 조건의 전세금";
+        $("resValue").textContent = won(j);
+        $("resSub").textContent = j ? toKoreanWon(j) : "";
+        $("resRows").innerHTML =
+          row("월세 보증금", won(deposit)) + row("월세를 보증금으로", won(j - deposit)) + row("적용 전환율", rate + "%");
+      } else {
+        const r = conversionRate({ jeonse, deposit, monthly });
+        $("resLabel").textContent = "지금 조건의 전환율";
+        $("resValue").textContent = r ? r.toFixed(2) + "%" : "-";
+        $("resSub").textContent = jeonse <= deposit ? "전세금이 월세 보증금보다 커야 해요." : "";
+        $("resRows").innerHTML =
+          row("전세금 − 월세 보증금", won(Math.max(jeonse - deposit, 0))) + row("연간 월세", won(monthly * 12));
+      }
+    }
+
+    ["jeonse", "deposit", "monthly"].forEach((id) => attachCommaInput($(id), render));
+    attachDecimalInput($("rate"), render);
+    bindSeg($("mode"), (v) => { mode = v; render(); });
+    renderRelated("rent");
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1b1d21" media="(prefers-color-scheme: dark)">
+  <title>대출 이자 계산기 - 원리금균등·원금균등·만기일시 월 상환액 | 계산해줘</title>
+  <meta name="description" content="대출금액, 금리, 기간을 넣으면 원리금균등·원금균등·만기일시 상환 방식별 월 상환액과 총 이자, 회차별 상환 스케줄을 바로 계산합니다.">
+  <link rel="canonical" href="/loan/">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a class="logo" href="../">계산<span>해줘</span></a>
+      <nav><a href="../">전체 계산기</a></nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>대출 이자 계산기</h1>
+    <p class="lead">대출금액, 금리, 기간을 넣으면 매달 갚을 돈과 총 이자를 알려드려요.</p>
+
+    <section class="card">
+      <div class="field">
+        <label for="principal">대출금액</label>
+        <div class="input-wrap">
+          <input id="principal" inputmode="numeric" autocomplete="off" value="100,000,000">
+          <span class="unit">원</span>
+        </div>
+        <div class="hint" id="principalKor"></div>
+        <div class="quick" data-target="principal">
+          <button type="button" data-add="10000000">+1,000만</button>
+          <button type="button" data-add="100000000">+1억</button>
+          <button type="button" data-set="0">지우기</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="rate">연 이자율</label>
+        <div class="input-wrap">
+          <input id="rate" inputmode="decimal" autocomplete="off" value="4.0">
+          <span class="unit">%</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="term">대출 기간</label>
+        <div class="row2">
+          <div class="input-wrap">
+            <input id="term" inputmode="numeric" autocomplete="off" value="30">
+          </div>
+          <div class="seg" id="termUnit" style="align-items:center" role="group" aria-label="기간 단위">
+            <button type="button" class="on" data-v="12">년</button>
+            <button type="button" data-v="1">개월</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label id="type-label">상환 방식</label>
+        <div class="seg" id="type" role="group" aria-labelledby="type-label">
+          <button type="button" class="on" data-v="equal">원리금균등</button>
+          <button type="button" data-v="principal">원금균등</button>
+          <button type="button" data-v="bullet">만기일시</button>
+        </div>
+        <div class="hint" id="typeHint"></div>
+      </div>
+    </section>
+
+    <section class="card" aria-live="polite">
+      <div class="result-main">
+        <div class="label" id="payLabel">월 상환액</div>
+        <div class="value" id="firstPay">0원</div>
+        <div class="sub" id="paySub"></div>
+      </div>
+      <ul class="rows">
+        <li><span class="k">대출 원금</span><span class="v" id="rP">0원</span></li>
+        <li><span class="k">총 이자</span><span class="v minus" id="rI">0원</span></li>
+        <li class="total"><span class="k">총 상환액</span><span class="v" id="rT">0원</span></li>
+      </ul>
+
+      <div class="table-scroll">
+        <table class="schedule">
+          <thead><tr><th>회차</th><th>상환액</th><th>원금</th><th>이자</th><th>남은 원금</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <button type="button" class="more-btn" id="more" hidden>전체 회차 보기</button>
+    </section>
+
+    <div class="ad-slot"></div>
+
+    <article class="card article">
+      <h2 style="margin-top:0">상환 방식, 뭐가 다른가요?</h2>
+      <table>
+        <tr><th>방식</th><th>매달 내는 돈</th><th>총 이자</th></tr>
+        <tr><td>원리금균등</td><td>매달 똑같음</td><td>중간</td></tr>
+        <tr><td>원금균등</td><td>처음에 많고 점점 줄어듦</td><td>가장 적음</td></tr>
+        <tr><td>만기일시</td><td>이자만 내다가 마지막에 원금 전부</td><td>가장 많음</td></tr>
+      </table>
+
+      <h3>원리금균등 상환</h3>
+      <p>원금과 이자를 합친 금액을 매달 똑같이 내요. 지출 계획을 세우기 쉬워서 주택담보대출에서 가장 많이 써요. 처음에는 이자 비중이 크고, 갈수록 원금 비중이 커져요.</p>
+
+      <h3>원금균등 상환</h3>
+      <p>원금을 매달 똑같이 나눠 갚고, 남은 원금에 대한 이자를 더해 내요. 처음 몇 년은 부담이 크지만 원금이 빨리 줄어서 총 이자가 가장 적어요.</p>
+
+      <h3>만기일시 상환</h3>
+      <p>대출 기간 동안 이자만 내고 마지막 달에 원금을 한 번에 갚아요. 매달 부담은 가장 작지만 총 이자가 가장 많아요. 신용대출이나 전세자금대출에서 주로 써요.</p>
+
+      <h2>자주 묻는 질문</h2>
+      <details>
+        <summary>1억 대출, 금리 4%, 30년이면 한 달에 얼마예요?</summary>
+        <p>원리금균등 기준으로 매달 약 47만 7천 원이고, 30년 동안 내는 이자는 약 7,187만 원이에요.</p>
+      </details>
+      <details>
+        <summary>금리 1%p 차이가 얼마나 커요?</summary>
+        <p>1억 원을 30년 동안 빌리면 금리 4%와 5%의 월 상환액 차이는 약 6만 원, 총 이자 차이는 약 2,140만 원이에요. 위 계산기에서 금리만 바꿔 비교해보세요.</p>
+      </details>
+      <details>
+        <summary>중도상환하면 이자가 줄어드나요?</summary>
+        <p>네, 남은 원금이 줄어드니 이후 이자도 줄어요. 다만 대출 후 3년 안에 갚으면 중도상환수수료가 붙을 수 있으니 은행에 확인하세요.</p>
+      </details>
+
+      <p class="notice">이 계산기는 고정금리와 매월 상환을 가정한 <b>참고용 추정치</b>예요. 변동금리, 거치기간, 실제 날짜별 이자 계산 방식에 따라 은행 금액과 차이가 날 수 있어요.</p>
+    </article>
+
+    <h2>다른 계산기</h2>
+    <div class="grid" id="related"></div>
+  </main>
+
+  <footer class="footer">
+    <div><a href="../about.html">사이트 소개</a><a href="../privacy.html">개인정보처리방침</a></div>
+    <div>© 2026 계산해줘 · 모든 계산 결과는 참고용입니다.</div>
+  </footer>
+
+  <script src="../assets/common.js"></script>
+  <script src="loan.js"></script>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const won = (n) => formatNumber(n) + "원";
+    const state = { unit: 12, type: "equal", showAll: false };
+    const HINT = {
+      equal: "매달 같은 금액을 갚아요.",
+      principal: "원금을 똑같이 나눠 갚아서 매달 금액이 줄어들어요.",
+      bullet: "매달 이자만 내고, 마지막 달에 원금을 한 번에 갚아요.",
+    };
+
+    function render() {
+      const principal = parseNumber($("principal").value);
+      const rate = parseDecimal($("rate").value);
+      const months = parseNumber($("term").value) * state.unit;
+      $("principalKor").textContent = principal ? toKoreanWon(principal) : "대출금액을 입력하세요";
+      $("typeHint").textContent = HINT[state.type];
+
+      const r = calcLoan({ principal, rate, months, type: state.type });
+      $("rP").textContent = won(principal);
+      $("rI").textContent = won(r.totalInterest);
+      $("rT").textContent = won(r.totalPay);
+
+      if (state.type === "equal") {
+        $("payLabel").textContent = "월 상환액";
+        $("paySub").textContent = months ? `${formatNumber(months)}개월 동안 매달` : "";
+      } else if (state.type === "principal") {
+        $("payLabel").textContent = "첫 달 상환액";
+        $("paySub").textContent = months ? `마지막 달 ${won(r.lastPay)}` : "";
+      } else {
+        $("payLabel").textContent = "월 이자";
+        $("paySub").textContent = months ? `마지막 달 ${won(r.lastPay)} (원금 포함)` : "";
+      }
+      $("firstPay").textContent = won(r.firstPay);
+
+      // 상환 스케줄 (처음 12회 + 전체 보기)
+      const list = state.showAll ? r.rows : r.rows.slice(0, 12);
+      $("tbody").innerHTML = list.map((x) =>
+        `<tr><td>${x.no}</td><td>${formatNumber(x.pay)}</td><td>${formatNumber(x.prin)}</td>` +
+        `<td>${formatNumber(x.interest)}</td><td>${formatNumber(x.bal)}</td></tr>`).join("");
+      $("more").hidden = state.showAll || r.rows.length <= 12;
+      $("more").textContent = `전체 ${formatNumber(r.rows.length)}회차 보기`;
+    }
+
+    attachCommaInput($("principal"), render);
+    attachCommaInput($("term"), render);
+    attachDecimalInput($("rate"), render);
+    bindQuick(render);
+    bindSeg($("termUnit"), (v) => { state.unit = Number(v); render(); });
+    bindSeg($("type"), (v) => { state.type = v; render(); });
+    $("more").addEventListener("click", () => { state.showAll = true; render(); });
+    renderRelated("loan");
+    render();
+  </script>
+</body>
+</html>
